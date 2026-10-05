@@ -2,197 +2,363 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@color/bg"
+    android:fillViewport="true"
+    android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
-        <TextView
+        <!-- ==================== 顶部渐变头部 ==================== -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:background="@drawable/bg_header"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="26dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="自动跳过应用里多余的弹窗页面。（管理界面，请勿外传）"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="状态检测中…" />
-
-        <Button
-            android:id="@+id/btnA11y"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="① 开启跳过服务（无障碍）" />
-
-        <CheckBox
-            android:id="@+id/cbVibrate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="跳过时震动一下" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="跳过之后去哪儿："
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/rgMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/rbExit"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="退回上一页（在群里点开就回到群聊）—— 推荐" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/rbHome"
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@mipmap/ic_launcher" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/AppTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name" />
+
+                    <TextView
+                        style="@style/AppSubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="自动跳过页面 · 不联网 · 无常驻通知" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ==================== 主体 ==================== -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="30dp">
+
+            <!-- ========== 状态卡 ========== -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="直接回桌面" />
-        </RadioGroup>
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_card"
+                android:elevation="3dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="11sp"
-            android:text="两种方式都会先按一次返回，这样重新打开微信不会又落回去。" />
+                <View
+                    android:id="@+id/dotStatus"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/dot_bad" />
 
-        <CheckBox
-            android:id="@+id/cbToast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="跳过时显示「已跳过」提示" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/cbContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="内容兜底检测（类名认不出时按页面特征判断，偶尔会误判）" />
+                    <TextView
+                        android:id="@+id/tvStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正在检测服务状态…"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
-        <CheckBox
-            android:id="@+id/cbForeground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="后台常驻（默认关。开了通知栏会多一条常驻通知，换来不容易被系统杀掉）" />
+                    <TextView
+                        android:id="@+id/tvStatusHint"
+                        style="@style/HintText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="" />
+                </LinearLayout>
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:text="② 深度锁定（更彻底，一次性）"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            <Button
+                android:id="@+id/btnA11y"
+                style="@style/BtnPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="打开系统无障碍设置" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="13sp"
-            android:text="把微信里相关页面直接从系统层面禁用。执行一次即可，重启、微信升级、卸载本应用都不会解除。" />
+            <!-- ========== 拦截方式 ========== -->
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="跳过之后去哪儿" />
 
-        <Button
-            android:id="@+id/btnLock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="用 Shizuku 一键深度锁定" />
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnAdb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="用电脑 adb 深度锁定（最可靠）" />
+                <RadioGroup
+                    android:id="@+id/rgMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnUnlock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="解除深度锁定（全部恢复）" />
+                    <RadioButton
+                        android:id="@+id/rbExit"
+                        style="@style/RadioRow"
+                        android:text="退回上一页（推荐）" />
 
-        <TextView
-            android:id="@+id/tvDeep"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:textSize="13sp"
-            android:text="深度锁定状态：未知" />
+                    <View style="@style/Divider" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:text="运行情况"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+                    <RadioButton
+                        android:id="@+id/rbHome"
+                        style="@style/RadioRow"
+                        android:text="直接回桌面" />
+                </RadioGroup>
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvBlocked"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="13sp"
-            android:text="已拦截：0 次" />
+            <TextView
+                style="@style/HintText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
+                android:text="「退回上一页」：在群里点开就回到群聊。两种方式都会先按一次返回，所以重新打开不会又落回去。" />
 
-        <TextView
-            android:id="@+id/tvLast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textSize="13sp"
-            android:text="最近命中：无" />
+            <!-- ========== 行为选项 ========== -->
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="行为选项" />
 
-        <Button
-            android:id="@+id/btnDiag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="★ 查看 / 复制诊断信息" />
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnWeChat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="打开微信，试一下效果" />
+                <Switch
+                    android:id="@+id/cbVibrate"
+                    style="@style/SwitchRow"
+                    android:text="跳过时震动一下" />
 
-        <Button
-            android:id="@+id/btnPin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="修改管理密码" />
+                <View style="@style/Divider" />
 
-        <Button
-            android:id="@+id/btnHelp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="使用说明 / 常见问题" />
+                <Switch
+                    android:id="@+id/cbToast"
+                    style="@style/SwitchRow"
+                    android:text="跳过时显示「已跳过」" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textSize="11sp"
-            android:text="跳广告 v1.4 · 由大肥鱼生成 · 不联网，不上传任何数据。" />
+                <View style="@style/Divider" />
 
+                <Switch
+                    android:id="@+id/cbContent"
+                    style="@style/SwitchRow"
+                    android:text="内容兜底检测" />
+
+                <View style="@style/Divider" />
+
+                <Switch
+                    android:id="@+id/cbForeground"
+                    style="@style/SwitchRow"
+                    android:text="后台常驻（会多一条通知）" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/HintText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
+                android:text="内容兜底：类名认不出时按页面特征判断，偶尔会误判。后台常驻：默认关，只有服务老被系统杀掉时才需要打开。" />
+
+            <!-- ========== 运行情况 ========== -->
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="运行情况" />
+
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingTop="15dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        style="@style/RowTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="累计跳过次数" />
+
+                    <TextView
+                        android:id="@+id/tvBlocked"
+                        style="@style/RowValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0" />
+                </LinearLayout>
+
+                <View style="@style/Divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="15dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="15dp">
+
+                    <TextView
+                        style="@style/RowTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="最近命中" />
+
+                    <TextView
+                        android:id="@+id/tvLast"
+                        style="@style/HintText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="暂无" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnDiag"
+                style="@style/BtnPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="查看 / 复制诊断信息" />
+
+            <Button
+                android:id="@+id/btnWeChat"
+                style="@style/BtnSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="打开微信试一下" />
+
+            <Button
+                android:id="@+id/btnPin"
+                style="@style/BtnSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="修改管理密码" />
+
+            <!-- ========== 高级 ========== -->
+            <TextView
+                style="@style/SectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="高级 · 深度锁定" />
+
+            <LinearLayout
+                style="@style/Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp">
+
+                <TextView
+                    android:id="@+id/tvDeep"
+                    style="@style/HintText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="深度锁定状态：未知" />
+
+                <Button
+                    android:id="@+id/btnLock"
+                    style="@style/BtnSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="14dp"
+                    android:text="Shizuku 一键深度锁定" />
+
+                <Button
+                    android:id="@+id/btnAdb"
+                    style="@style/BtnSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="14dp"
+                    android:text="用电脑 adb 深度锁定" />
+
+                <Button
+                    android:id="@+id/btnUnlock"
+                    style="@style/BtnSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="14dp"
+                    android:text="解除深度锁定" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/HintText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
+                android:text="把相关页面从系统层面禁用，重启 / 微信升级 / 卸载本应用都不解除。注意：部分华为、荣耀机型不允许这样改，会直接失败 —— 不影响上面的跳过服务。" />
+
+            <Button
+                android:id="@+id/btnHelp"
+                style="@style/BtnFlat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="使用说明 / 常见问题" />
+
+            <TextView
+                style="@style/HintText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:gravity="center"
+                android:text="跳广告 v1.5 · 由大肥鱼生成 · 不联网，不上传任何数据" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

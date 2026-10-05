@@ -68,8 +68,8 @@ $baseApk = Join-Path $build 'base.apk'
     --java (Join-Path $build 'gen') `
     --min-sdk-version 21 `
     --target-sdk-version 33 `
-    --version-code 5 `
-    --version-name 1.4 `
+    --version-code 6 `
+    --version-name 1.5 `
     --auto-add-overlay
 if ($LASTEXITCODE -ne 0) { Die 'aapt2 link 失败' }
 
@@ -143,7 +143,7 @@ if (-not (Test-Path $ks)) {
     if (-not (Test-Path $ks)) { Die 'keytool 生成密钥失败' }
 }
 
-$finalApk = Join-Path $dist 'tiaoguanggao-v1.4.apk'
+$finalApk = Join-Path $dist 'tiaoguanggao-v1.5.apk'
 if (Test-Path $finalApk) { Remove-Item $finalApk -Force }
 
 & $apksigner sign `

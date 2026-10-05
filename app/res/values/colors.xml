@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 品牌色 -->
+    <color name="brand">#FF2E6B4F</color>
+    <color name="brand_dark">#FF1B4433</color>
+    <color name="brand_soft">#FFE7F2EC</color>
+
+    <!-- 背景与卡片 -->
+    <color name="bg">#FFF2F4F6</color>
+    <color name="card">#FFFFFFFF</color>
+    <color name="stroke">#FFE4E8EC</color>
+
+    <!-- 文字 -->
+    <color name="text_primary">#FF16212B</color>
+    <color name="text_secondary">#FF6B7684</color>
+    <color name="text_hint">#FF9AA4B0</color>
+
+    <!-- 状态 -->
+    <color name="ok">#FF1B7A3D</color>
+    <color name="bad">#FFB3261E</color>
+    <color name="warn">#FFB26A00</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="header_sub">#CCE9F3EE</color>
+</resources>

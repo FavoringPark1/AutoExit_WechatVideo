@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingTop="4dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="0dp">
+
+    <TextView
+        android:id="@+id/tvPinHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="请输入管理密码（出厂默认 1234）"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp" />
+
+    <EditText
+        android:id="@+id/etPin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/brand"
+        android:gravity="center"
+        android:hint="····"
+        android:inputType="numberPassword"
+        android:letterSpacing="0.4"
+        android:maxLength="8"
+        android:textSize="22sp" />
+</LinearLayout>

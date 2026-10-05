@@ -79,7 +79,7 @@ public final class Diag {
         sb.append("机型   : ").append(Build.MANUFACTURER).append(' ').append(Build.MODEL)
                 .append(" / Android ").append(Build.VERSION.RELEASE)
                 .append(" (API ").append(Build.VERSION.SDK_INT).append(")").append('\n');
-        sb.append("目标SDK: 33 / 版本 1.4").append('\n');
+        sb.append("目标SDK: 33 / 版本 1.5").append('\n');
         sb.append("拦截方式: ")
                 .append(Prefs.mode(ctx) == Prefs.MODE_HOME ? "直接回桌面" : "退回上一页")
                 .append('\n');

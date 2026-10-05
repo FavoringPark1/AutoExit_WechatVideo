@@ -30,13 +30,15 @@ public class MainActivity extends Activity {
     private static final int REQ_NOTI = 4002;
 
     private TextView tvStatus;
+    private TextView tvStatusHint;
+    private View dotStatus;
     private TextView tvDeep;
     private TextView tvLast;
     private TextView tvBlocked;
-    private CheckBox cbVibrate;
-    private CheckBox cbToast;
-    private CheckBox cbContent;
-    private CheckBox cbForeground;
+    private android.widget.Switch swVibrate;
+    private android.widget.Switch swToast;
+    private android.widget.Switch swContent;
+    private android.widget.Switch swForeground;
     private android.widget.RadioGroup rgMode;
 
     private boolean listenersRegistered = false;
@@ -48,40 +50,43 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         tvStatus = (TextView) findViewById(R.id.tvStatus);
+        tvStatusHint = (TextView) findViewById(R.id.tvStatusHint);
+        dotStatus = findViewById(R.id.dotStatus);
         tvDeep = (TextView) findViewById(R.id.tvDeep);
         tvLast = (TextView) findViewById(R.id.tvLast);
         tvBlocked = (TextView) findViewById(R.id.tvBlocked);
-        cbVibrate = (CheckBox) findViewById(R.id.cbVibrate);
-        cbToast = (CheckBox) findViewById(R.id.cbToast);
-        cbContent = (CheckBox) findViewById(R.id.cbContent);
-        cbForeground = (CheckBox) findViewById(R.id.cbForeground);
+        swVibrate = (android.widget.Switch) findViewById(R.id.cbVibrate);
+        swToast = (android.widget.Switch) findViewById(R.id.cbToast);
+        swContent = (android.widget.Switch) findViewById(R.id.cbContent);
+        swForeground = (android.widget.Switch) findViewById(R.id.cbForeground);
         rgMode = (android.widget.RadioGroup) findViewById(R.id.rgMode);
 
-        cbVibrate.setChecked(Prefs.vibrate(this));
-        cbToast.setChecked(Prefs.showToast(this));
-        cbContent.setChecked(Prefs.contentFallback(this));
-        cbForeground.setChecked(Prefs.foreground(this));
+        // 先设初值，再挂监听 —— 否则初始化就会触发回调（比如把服务启动起来）
+        swVibrate.setChecked(Prefs.vibrate(this));
+        swToast.setChecked(Prefs.showToast(this));
+        swContent.setChecked(Prefs.contentFallback(this));
+        swForeground.setChecked(Prefs.foreground(this));
         ((android.widget.RadioButton) findViewById(
                 Prefs.mode(this) == Prefs.MODE_HOME ? R.id.rbHome : R.id.rbExit)).setChecked(true);
 
-        cbVibrate.setOnClickListener(bool(cbVibrate, Prefs.KEY_VIBRATE));
-        cbToast.setOnClickListener(bool(cbToast, Prefs.KEY_TOAST));
-        cbContent.setOnClickListener(bool(cbContent, Prefs.KEY_CONTENT));
+        bindSwitch(swVibrate, Prefs.KEY_VIBRATE);
+        bindSwitch(swToast, Prefs.KEY_TOAST);
+        bindSwitch(swContent, Prefs.KEY_CONTENT);
 
-        cbForeground.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                boolean on = cbForeground.isChecked();
-                Prefs.setForeground(MainActivity.this, on);
-                if (on) {
-                    requestNotificationPermission();
-                    startGuardService();
-                    toast("已开启后台常驻，通知栏会出现一条通知");
-                } else {
-                    stopGuardService();
-                    toast("已关闭后台常驻，通知栏不再有通知");
-                }
-            }
-        });
+        swForeground.setOnCheckedChangeListener(
+                new android.widget.CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(android.widget.CompoundButton b, boolean on) {
+                        Prefs.setForeground(MainActivity.this, on);
+                        if (on) {
+                            requestNotificationPermission();
+                            startGuardService();
+                            toast("已开启后台常驻，通知栏会出现一条通知");
+                        } else {
+                            stopGuardService();
+                            toast("已关闭后台常驻，通知栏不再有通知");
+                        }
+                    }
+                });
 
         rgMode.setOnCheckedChangeListener(new android.widget.RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(android.widget.RadioGroup group, int checkedId) {
@@ -137,12 +142,12 @@ public class MainActivity extends Activity {
         askPin();
     }
 
-    private View.OnClickListener bool(final CheckBox box, final String key) {
-        return new View.OnClickListener() {
-            public void onClick(View v) {
-                Prefs.setBool(MainActivity.this, key, box.isChecked());
+    private void bindSwitch(final android.widget.Switch sw, final String key) {
+        sw.setOnCheckedChangeListener(new android.widget.CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(android.widget.CompoundButton b, boolean checked) {
+                Prefs.setBool(MainActivity.this, key, checked);
             }
-        };
+        });
     }
 
     @Override
@@ -161,12 +166,16 @@ public class MainActivity extends Activity {
 
     private void refresh() {
         boolean on = Diag.isAccessibilityEnabled(this);
-        tvStatus.setText(on ? "跳过服务：已开启 ✓" : "跳过服务：未开启 ✗");
+        tvStatus.setText(on ? "跳过服务已开启" : "跳过服务未开启");
         tvStatus.setTextColor(on ? 0xFF1B7A3D : 0xFFB3261E);
+        tvStatusHint.setText(on
+                ? "相关页面会被自动跳过"
+                : "点下面的按钮，去系统设置里打开一次");
+        dotStatus.setBackgroundResource(on ? R.drawable.dot_ok : R.drawable.dot_bad);
 
-        tvBlocked.setText("已拦截：" + Prefs.get(this).getInt(Prefs.KEY_BLOCKED, 0) + " 次");
+        tvBlocked.setText(String.valueOf(Prefs.get(this).getInt(Prefs.KEY_BLOCKED, 0)));
         String last = Prefs.get(this).getString(Prefs.KEY_LAST, "");
-        tvLast.setText(last.length() == 0 ? "最近命中：无" : "最近命中：" + last);
+        tvLast.setText(last.length() == 0 ? "暂无" : last);
 
         updateDeepStatus();
     }
@@ -548,14 +557,12 @@ public class MainActivity extends Activity {
     // ---------------------------------------------------------------- 密码
 
     private void askPin() {
-        final EditText et = new EditText(this);
-        et.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-        et.setHint("管理密码");
+        View v = getLayoutInflater().inflate(R.layout.dialog_pin, null);
+        final EditText et = (EditText) v.findViewById(R.id.etPin);
 
         final AlertDialog d = new AlertDialog.Builder(this)
                 .setTitle(R.string.app_name)
-                .setMessage("请输入管理密码（出厂默认 1234）")
-                .setView(et)
+                .setView(v)
                 .setCancelable(false)
                 .setPositiveButton("确定", null)
                 .setNegativeButton("退出", new DialogInterface.OnClickListener() {
@@ -579,21 +586,22 @@ public class MainActivity extends Activity {
     }
 
     private void changePin() {
-        final EditText et = new EditText(this);
-        et.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-        et.setHint("新的 4~8 位数字密码");
+        View v = getLayoutInflater().inflate(R.layout.dialog_pin, null);
+        ((TextView) v.findViewById(R.id.tvPinHint)).setText("新的 4~8 位数字密码，别忘了");
+        final EditText et = (EditText) v.findViewById(R.id.etPin);
+        et.setHint("新密码");
         new AlertDialog.Builder(this)
                 .setTitle("修改管理密码")
-                .setView(et)
+                .setView(v)
                 .setNegativeButton("取消", null)
                 .setPositiveButton("保存", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface d, int w) {
-                        String v = et.getText().toString().trim();
-                        if (v.length() < 4 || v.length() > 8) {
+                        String val = et.getText().toString().trim();
+                        if (val.length() < 4 || val.length() > 8) {
                             toast("密码必须是 4~8 位数字");
                             return;
                         }
-                        Prefs.setPin(MainActivity.this, v);
+                        Prefs.setPin(MainActivity.this, val);
                         toast("密码已更新，请记牢");
                     }
                 })
