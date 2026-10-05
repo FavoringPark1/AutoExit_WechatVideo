@@ -1,0 +1,13 @@
+# 编译工具链（几百 MB，不入库）
+toolchain/
+
+# 构建中间产物
+app/build/
+
+# 签名产物附件
+*.idsig
+
+# 系统垃圾
+Thumbs.db
+desktop.ini
+*.log
